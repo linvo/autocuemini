@@ -1,0 +1,99 @@
+<html>
+<head>
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>	
+<style>
+	.contents{
+		/*text-align:center;*/
+		box-sizing: border-box;
+		overflow:hidden;
+		height:1000px;
+		width:100%;
+		padding:0 50px;
+		font-size:130px; /*字体大小*/
+		line-height: 150px;
+		color:#eee;
+		margin:0 auto;
+		position: relative;
+		display: none;
+	}
+	.text{
+		white-space: break-spaces;
+		position: absolute;
+		top: 0px;
+	}
+
+</style>
+</head>
+<body style="background-color:#000;">
+<div id="setting">
+	<textarea id="text" style="width:800px;height:300px;"></textarea>
+	<br><br>
+	<button id="btn_start" style="width:800px;height:40px;"> 开 始 </button>
+</div>
+<div id="contents" class="contents">
+	<pre id="dl" class="text">
+	</pre>
+</div>
+<script>
+
+	//自动滚动
+	var drawLetters = document.getElementById("contents");　　　　
+	var dl = document.getElementById("dl");　　　　
+	var speed = 12; //滚动速度值，值越大速度越慢　　
+	function move(step = -1){
+		var top = parseInt($('#dl').css('top'));
+		top = (top + step) + 'px';
+		$('#dl').css('top', top);
+	}　　　
+	var timer = null;
+	function run(){
+		timer = setInterval(move, speed); //设置定时器
+	}
+
+	var pause = 0;
+	$().ready(function(){
+		$("#btn_start").click(function(){
+			$("#setting").hide();
+			$("#contents").show();
+			var text = $.trim($('#text').val());
+			$("#dl").html(text);
+		});
+
+		//鼠标点击暂停
+		$('#contents').click(function(){
+			pause = !pause;
+			if (pause){
+				//暂停
+				clearInterval(timer);
+			} else {
+				//继续
+				run();
+				//MyMar = setInterval(move, speed);
+			}
+		});
+	});
+
+
+
+	//鼠标滚动
+	var scrollFunc=function(e){   
+		clearInterval(timer);
+	    e=e || window.event;   
+	    if(e.wheelDelta){//IE/Opera/Chrome  
+	        if(e.wheelDelta > 0){  
+	            //向上滚动事件 
+				move(10);　
+	        }else{
+				//向下滚动事件
+				move(-10);　
+			}
+		} //ScrollText(direct); 
+		//MyMar = setInterval(move, speed);
+		if (!pause) run();
+	} 
+	/*注册事件*/   
+	if(document.addEventListener){ document.addEventListener('DOMMouseScroll',scrollFunc,false);}
+	window.onmousewheel=document.onmousewheel=scrollFunc;
+</script>
+</body>
+</html>
